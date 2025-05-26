@@ -1,0 +1,69 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    @apply bg-black text-white font-sans overflow-x-hidden;
+  }
+  
+  /* Hide default cursor when custom cursor is active */
+  .cursor-none {
+    cursor: none;
+  }
+  
+  /* Keep default cursor for inputs and other form elements */
+  input, textarea, select, button, a {
+    @apply cursor-none;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-bold;
+  }
+}
+
+.custom-cursor, .custom-cursor-dot {
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+}
+
+@layer components {
+  .container-custom {
+    @apply container mx-auto px-4 md:px-6;
+  }
+  
+  .btn {
+    @apply px-6 py-2 rounded-md transition-all duration-300 text-sm md:text-base;
+  }
+  
+  .btn-primary {
+    @apply bg-white text-black hover:bg-gray-200;
+  }
+  
+  .section {
+    @apply py-16 md:py-24;
+  }
+}
+
+/* Chrome, Edge, Safari */
+body::-webkit-scrollbar {
+  display: none;
+}
+
+/* Custom Cursor Animation */
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
