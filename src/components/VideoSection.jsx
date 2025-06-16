@@ -1,25 +1,30 @@
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import ReactPlayer from 'react-player';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 
+// Import videos
 const videos = [
   {
     id: 1,
     title: "Afinity uses data and artificial intelligence to transform the quality of    interpersonal interactions",
-    url: "/videos/hyy.webm",
-    buttonId: "what-we-do"
+    url: "https://res.cloudinary.com/ddzllbqlv/video/upload/v1748342620/zjtzamruh1ztnsjntam7.mp4",
+    buttonId: "what-we-do",
+    path: "/what-we-do"
   },
   {
     id: 2,
     title: "How We Do It",
-    url: "/videos/loll.webm",
-    buttonId: "how-we-do-it"
+    url: "https://res.cloudinary.com/ddzllbqlv/video/upload/v1748342623/kfeixt00owusza7oaoxw.mp4",
+    buttonId: "how-we-do-it",
+    path: "/how-we-do-it"
   },
   {
     id: 3,
     title: "What We Deliver",
-    url: "/videos/jiu.webm",
-    buttonId: "what-we-deliver"
+    url: "https://res.cloudinary.com/ddzllbqlv/video/upload/v1748342633/zdwyblkjivgsog2q2fad.mp4",
+    buttonId: "what-we-deliver",
+    path: "/what-we-deliver"
   }
 ];
 
@@ -33,11 +38,11 @@ const VideoSection = () => {
   const [isMobile, setIsMobile] = useState(false);
   const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
   const [isHovering, setIsHovering] = useState(false);
-  const [loadedVideos, setLoadedVideos] = useState(new Set());
+  const [videoError, setVideoError] = useState(false);
+  const navigate = useNavigate();
   
   const playerRef = useRef(null);
   const timerRef = useRef(null);
-  const videoPreloadRefs = useRef(new Map());
   const buttonTimeoutRef = useRef(null);
   const resizeTimeoutRef = useRef(null);
 
@@ -80,76 +85,6 @@ const VideoSection = () => {
       mixBlendMode: "difference"
     }
   }), [cursorPosition.x, cursorPosition.y]);
-
-  // Optimized video preloading with better memory management
-  useEffect(() => {
-    const preloadVideos = async () => {
-      // Only preload the first video initially
-      const firstVideo = videos[0];
-      if (!videoPreloadRefs.current.has(firstVideo.id)) {
-        const videoElement = document.createElement('video');
-        videoElement.src = firstVideo.url;
-        videoElement.preload = 'metadata';
-        videoElement.muted = true;
-        videoElement.playsInline = true;
-        
-        videoPreloadRefs.current.set(firstVideo.id, videoElement);
-        
-        await new Promise((resolve) => {
-          const onCanPlay = () => {
-            setLoadedVideos(prev => new Set([...prev, firstVideo.id]));
-            videoElement.removeEventListener('canplay', onCanPlay);
-            resolve();
-          };
-          
-          const onError = () => {
-            console.warn(`Failed to preload video: ${firstVideo.url}`);
-            videoElement.removeEventListener('error', onError);
-            resolve();
-          };
-          
-          videoElement.addEventListener('canplay', onCanPlay);
-          videoElement.addEventListener('error', onError);
-        });
-      }
-
-      // Preload next video when needed
-      const preloadNextVideo = (nextIndex) => {
-        if (nextIndex < videos.length) {
-          const nextVideo = videos[nextIndex];
-          if (!videoPreloadRefs.current.has(nextVideo.id)) {
-            const videoElement = document.createElement('video');
-            videoElement.src = nextVideo.url;
-            videoElement.preload = 'metadata';
-            videoElement.muted = true;
-            videoElement.playsInline = true;
-            
-            videoPreloadRefs.current.set(nextVideo.id, videoElement);
-          }
-        }
-      };
-
-      // Add listener for video changes to preload next video
-      const handleVideoChange = (index) => {
-        preloadNextVideo(index + 1);
-      };
-
-      return handleVideoChange;
-    };
-
-    const cleanup = preloadVideos();
-
-    return () => {
-      if (typeof cleanup === 'function') {
-        cleanup();
-      }
-      videoPreloadRefs.current.forEach((videoElement) => {
-        videoElement.src = '';
-        videoElement.load();
-      });
-      videoPreloadRefs.current.clear();
-    };
-  }, []);
 
   // Debounced resize handler
   const handleResize = useCallback(() => {
@@ -248,7 +183,13 @@ const VideoSection = () => {
   }, [activeVideo, nextButtonIndex]);
 
   const handleVideoChange = useCallback((index, isManualClick = true) => {
-    if (index === activeVideo) return; // Prevent unnecessary updates
+    const selectedVideo = videos[index];
+    
+    if (index === activeVideo && selectedVideo.path) {
+      console.log('Navigating to:', selectedVideo.path); // Debug log
+      navigate(selectedVideo.path);
+      return;
+    }
     
     setShowButton(false);
     setActiveVideo(index);
@@ -258,7 +199,7 @@ const VideoSection = () => {
       setTimerKey(prevKey => prevKey + 1);
       startVideoTimer();
     }
-  }, [activeVideo, startVideoTimer]);
+  }, [activeVideo, startVideoTimer, navigate]);
 
   const handleButtonHover = useCallback((hovering) => {
     if (!isMobile) {
@@ -270,13 +211,19 @@ const VideoSection = () => {
   const currentVideo = useMemo(() => videos[activeVideo], [activeVideo]);
   const nextVideo = useMemo(() => videos[nextButtonIndex], [nextButtonIndex]);
 
+  // Add error handling to ReactPlayer
+  const handleVideoError = () => {
+    console.error('Video failed to load');
+    setVideoError(true);
+  };
+
   return (
     <div className="relative w-full h-screen overflow-hidden">
       {/* Background Video */}
       <AnimatePresence mode="wait">
         <motion.div
           key={`video-${activeVideo}`}
-  className="absolute inset-0 w-full h-full pointer-events-none"
+          className="absolute inset-0 w-full h-full pointer-events-none"
           variants={videoVariants}
           initial="hidden"
           animate="visible"
@@ -291,11 +238,12 @@ const VideoSection = () => {
             width="100%"
             height="100%"
             playsinline
+            onError={handleVideoError}
             style={{ objectFit: 'cover', position: 'absolute', top: 0, left: 0, pointerEvents: 'none' }}
             config={{
               file: {
                 attributes: {
-                  preload: 'metadata',
+                  preload: 'auto',
                   style: {
                     width: '100%',
                     height: '100%',
@@ -311,21 +259,20 @@ const VideoSection = () => {
 
       {/* Button Nav - Desktop (Top Right) */}
       {!isMobile && (
-<div className="absolute top-8 right-[calc(2rem--250px)] z-[5000] flex flex-row gap-8 pointer-events-auto">
+        <div className="absolute top-8 right-[calc(2rem--190px)] z-[5000] flex flex-row gap-8 pointer-events-auto">
           {videos.map((video, index) => (
             <div key={video.id} className="flex flex-col group">
               <button
                 id={video.buttonId}
-                className={`text-white uppercase text-lm font-medium tracking-wider  ${
+                className={`text-white uppercase text-lm font-medium tracking-wider ${
                   activeVideo === index ? 'opacity-100' : 'opacity-40 hover:opacity-100'
                 } transition-opacity duration-300 text-left`}
                 onClick={() => handleVideoChange(index, true)}
                 onMouseEnter={() => handleButtonHover(true)}
                 onMouseLeave={() => handleButtonHover(false)}
               >
-                {video.buttonId.replace(/-/g, ' ')}
+                {video.buttonId === 'how-we-do-it' ? 'How We Do It' : video.buttonId.replace(/-/g, ' ')}
               </button>
-       
             </div>
           ))}
         </div>
@@ -349,11 +296,17 @@ const VideoSection = () => {
       {/* Text content - Responsive positioning */}
       <div className="absolute inset-0 flex flex-col justify-center text-left z-10 px-4 sm:px-6 md:px-8 lg:ml-40 lg:px-4">
         <motion.h1
-          className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-3 sm:mb-4 md:mb-6 max-w-full sm:max-w-2xl md:max-w-3xl lg:max-w-4xl xl:max-w-5xl leading-tight sm:leading-tight md:leading-tight"
+          className={`text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-3 sm:mb-4 md:mb-6 max-w-full sm:max-w-2xl md:max-w-3xl lg:max-w-4xl xl:max-w-5xl leading-tight sm:leading-tight md:leading-tight ${
+            currentVideo.buttonId === 'how-we-do-it' ? ' hover:text-green-400 transition-colors duration-300' : ''
+          }`}
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3, duration: 0.5 }}
           key={`title-${activeVideo}`}
+          onClick={() => currentVideo.buttonId === 'how-we-do-it' && navigate('/how-we-do-it')}
+          onMouseEnter={() => currentVideo.buttonId === 'how-we-do-it' && setIsHovering(true)}
+          onMouseLeave={() => currentVideo.buttonId === 'how-we-do-it' && setIsHovering(false)}
+          style={currentVideo.buttonId === 'how-we-do-it' ? { cursor: 'pointer' } : {}}
         >
           {currentVideo.title}
         </motion.h1>
@@ -382,7 +335,7 @@ const VideoSection = () => {
             onMouseLeave={() => handleButtonHover(false)}
             style={{ zIndex: 40 }}
           >
-            Discover {nextVideo.buttonId.replace(/-/g, ' ')} →
+            Next: {videos[nextButtonIndex].title.split(' ').slice(0, 3).join(' ')} →
           </motion.button>
         )}
       </AnimatePresence>

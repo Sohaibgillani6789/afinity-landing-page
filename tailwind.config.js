@@ -3,7 +3,7 @@ module.exports = {
   theme: {
     extend: {
       screens: {
-        'xs': '375px', // Extra small screens (iPhone SE, etc.)
+        'xs': '320px', // Extra small screens (iPhone SE, etc.)
       },
       fontFamily: {
         sans: ['Inter', 'sans-serif'],
