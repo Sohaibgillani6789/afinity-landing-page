@@ -27,7 +27,7 @@ const Footer = () => {
         <div 
           className="absolute inset-0"
           style={{
-           background: `url('/pictures/pattern.svg') no-repeat center 120px`,           
+           background: `url('/pictures/pattern.svg') no-repeat center 100px`,           
            backgroundRepeat: 'no-repeat',
            backgroundPosition: 'center center',
            backgroundSize: 'cover',

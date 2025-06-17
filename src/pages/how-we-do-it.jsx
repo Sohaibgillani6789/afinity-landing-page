@@ -88,14 +88,10 @@ const HowWeDoIt = ({ showProcessSummary = true }) => { // Default to true for ex
       requestAnimationFrame(raf);
     }
 
-    // Start the animation frame loop
+
     requestAnimationFrame(raf);
 
-    // If you need to access the lenis instance globally or for other purposes,
-    // you can store it in a ref or a global state/context.
-    // For now, it's scoped to this useEffect.
-
-    // Cleanup function: destroy lenis instance when component unmounts
+  
     return () => {
       lenis.destroy();
     };
@@ -175,32 +171,10 @@ const HowWeDoIt = ({ showProcessSummary = true }) => { // Default to true for ex
 
     const targetSection = document.querySelector(`[data-section-index="${targetIndex}"]`);
     if (targetSection) {
-      // Lenis provides a scroll API, use it for smooth scrolling
-      // Get the Lenis instance if it's stored, or access it if it's globally available
-      // For now, we'll assume Lenis manages the entire body.
-      // If you're scrolling a specific container, you'd need lenis.scrollTo(element, options)
-
-      // To scroll to a specific element using Lenis:
-      // lenis.scrollTo(targetSection, { offset: -80, duration: 1, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)) });
-      // Since Lenis automatically takes over the scroll, standard window.scrollTo will *not* work with Lenis.
-      // You need to access the Lenis instance to use its scroll method.
-      // A common pattern is to expose the Lenis instance through React Context or a global variable if you need to call it from various places.
-      // For now, we'll revert to standard scrollIntoView as Lenis might not be directly accessible here without more setup.
-      // However, if Lenis is correctly initialized on the 'body' element, the native scroll will be intercepted.
-      // The crucial part is to ensure the fixed elements are not affected by Lenis's scroll transform.
-
-      // For `scrollIntoView` to work smoothly with Lenis, Lenis itself needs to be handling the scroll.
-      // If Lenis is applied to the 'body', then calling `scrollIntoView` on an element will trigger Lenis's smooth scroll.
-      // The `offset` is tricky here because Lenis transforms the scroll.
-
-      // A simple `scrollIntoView` should now be smooth with Lenis active.
+    
       targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
-      // Adjust for fixed header if needed after the scroll
-      // You might need to refine the offset based on your fixed header's height
-      // and how Lenis handles scroll positions.
-      // The `lenis.scrollTo()` method is usually better for precise offsets.
-      // If you need the offset, you'll need access to the `lenis` instance.
+  
     }
 
     if (isOpen) {

@@ -46,7 +46,7 @@ const BlogPost = () => {
         fetchSingleBlogPost();
     }, [slug]);    return (
         <div className="min-h-screen bg-gradient-to-b from-[#132407] to-[#142454] flex flex-col">
-            <Navbar noBlur={false} />
+      <Navbar noBlur={true} />
             
             <div className="container mx-auto px-4 py-16 flex-grow">
                 {loading && (

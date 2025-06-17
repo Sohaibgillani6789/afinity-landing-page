@@ -38,7 +38,7 @@ const Blog = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#070c24] to-[#142454] flex flex-col">
-      <Navbar noBlur />
+      <Navbar noBlur={true} />
       
       <div className="container mx-auto px-4 py-16 flex-grow">
         <h1 className="text-4xl md:text-6xl text-white font-bold mb-12 text-center">
