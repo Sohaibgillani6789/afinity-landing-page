@@ -13,6 +13,7 @@ yarn-error.log
 dist/
 build/
 out/
+.cache/
 
 # IDE and editor files
 .idea/
@@ -23,3 +24,12 @@ out/
 # OS generated files
 .DS_Store
 Thumbs.db
+
+# Large media files
+*.exe
+*.pack
+public/videos/*.webm
+
+# Development cache
+.cache/
+node_modules/.cache/
