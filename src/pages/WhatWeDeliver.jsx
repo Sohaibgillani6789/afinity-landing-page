@@ -96,9 +96,8 @@ const WhatWeDeliver = () => {
       <div className="min-h-screen animate-slideIn">
         {/* First Section - Dark Blue */}          <section className="relative min-h-screen bg-[#070c24] flex flex-col overflow-hidden">
           <div className="w-full" style={{ position: 'relative' }}>
-            <div style={{ position: 'static' }}>
-              <nav className="relative">
-                <Navbar />
+            <div style={{ position: 'static' }}>              <nav className="relative">
+                <Navbar noBlur />
               </nav>
             </div>
           </div>
@@ -131,9 +130,9 @@ const WhatWeDeliver = () => {
         </section>
 
         {/* Second Section - White (Integrated CSV Table) */}
-        <section className="min-h-screen bg-white py-16 px-4 sm:px-6 lg:px-8 flex flex-col items-center">
+        <section className="min-h-screen bg-white py-20 px-8 flex flex-col items-center">
           <div className="container mx-auto">
-            <h2 className="text-3xl md:text-5xl text-gray-800 font-bold text-center mb-10">
+            <h2 className="text-5xl text-gray-800 font-bold text-center mb-10">
               Our Key Deliverables
             </h2>
 
@@ -159,7 +158,7 @@ const WhatWeDeliver = () => {
                       setRowsPerPage(Number(e.target.value));
                       setCurrentPage(1);
                     }}
-                    className="border border-pink-300 rounded px-2 py-1 bg-pink-800 cursor-pointer appearance-nonefocus:outline-none focus:border-pink-400 focus:ring-1 focus:ring-pink-400"
+                    className="border border-pink-300 rounded px-2 py-1 bg-pink-800 cursor-pointer appearance-none focus:outline-none focus:border-pink-400 focus:ring-1 focus:ring-pink-400"
                     style={{
                       WebkitAppearance: "menulist",
                       MozAppearance: "menulist",
@@ -184,7 +183,7 @@ const WhatWeDeliver = () => {
                         {headers.map((header, index) => (
                           <th
                             key={index}
-                            className="px-4 py-3 sm:px-6 sm:py-4 text-left text-xs font-semibold text-pink-700 uppercase tracking-wider border-b border-r last:border-r-0 border-pink-300"
+                            className="px-6 py-4 text-left text-xs font-semibold text-pink-700 uppercase tracking-wider border-b border-r last:border-r-0 border-pink-300"
                           >
                             {header}
                           </th>
@@ -197,7 +196,7 @@ const WhatWeDeliver = () => {
                           {headers.map((header, colIndex) => (
                             <td
                               key={`${rowIndex}-${colIndex}`}
-                              className="px-4 py-3 sm:px-6 sm:py-4 whitespace-nowrap text-sm text-gray-800 border-b border-r last:border-r-0 border-pink-200"
+                              className="px-6 py-4 text-sm text-gray-800 border-b border-r last:border-r-0 border-pink-200 break-words"
                             >
                               {row[header] !== null && row[header] !== undefined ? row[header].toString() : ''}
                             </td>
@@ -209,21 +208,21 @@ const WhatWeDeliver = () => {
                 </div>
 
                 <div className="flex justify-between items-center mt-4">
-                  <div className="text-gray-600">
+                  <div className="text-sm text-gray-600">
                     Showing {indexOfFirstRow + 1} to {Math.min(indexOfLastRow, tableData.length)} of {tableData.length} entries
                   </div>
                   <div className="flex gap-2">
                     <button
                       onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
                       disabled={currentPage === 1}
-                      className="px-3 py-1 border border-pink-300 rounded disabled:opacity-50 disabled:cursor-not-allowed hover:bg-pink-50"
+                      className="px-3 py-1 text-sm border border-pink-300 rounded disabled:opacity-50 disabled:cursor-not-allowed hover:bg-pink-50"
                     >
                       Previous
                     </button>
                     <button
                       onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
                       disabled={currentPage === totalPages}
-                      className="px-3 py-1 border border-pink-300 rounded disabled:opacity-50 disabled:cursor-not-allowed hover:bg-pink-50"
+                      className="px-3 py-1 text-sm border border-pink-300 rounded disabled:opacity-50 disabled:cursor-not-allowed hover:bg-pink-50"
                     >
                       Next
                     </button>

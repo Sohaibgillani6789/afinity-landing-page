@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { motion } from 'framer-motion';
-import Lenis from '@studio-freight/lenis'; // Import Lenis
+import Lenis from '@studio-freight/lenis';
 
 // Accept showProcessSummary as a prop
 const HowWeDoIt = ({ showProcessSummary = true }) => { // Default to true for existing behavior
@@ -233,36 +233,21 @@ const HowWeDoIt = ({ showProcessSummary = true }) => { // Default to true for ex
   return (
     <>
       {/*
-        Crucial for Lenis:
-        Lenis typically applies transforms to the root scrollable element (usually <body> or a specific container).
-        Elements that are 'fixed' or 'sticky' should be positioned *relative to the viewport*
-        and not within the container that Lenis is transforming.
-
-        Your Navbar, H1 text, and Back to Home button have 'fixed' positioning.
-        They should be *outside* the main scrollable `motion.div` if that's what Lenis is applied to,
-        OR ensure that Lenis is applied to the `body` and your fixed elements are styled correctly
-        relative to the viewport (which they generally are with `position: fixed`).
-        The `overflow-y-auto overflow-x-hidden` on the motion.div below might be conflicting if Lenis
-        is not managing the scroll on the `body` element.
-
-        Let's assume Lenis is managing the `body` element (its default behavior).
-        Then your fixed elements should remain fixed relative to the viewport.
-        The issue might be with z-index or other CSS conflicts.
+    
       */}
-      <div className="relative min-h-screen"> {/* Use a relative container for fixed children */}
-        {/* Navbar, Back to Home, and HOW WE DO IT are fixed/absolute and need to be rendered conditionally outside the main scrollable content for Lenis to work correctly and prevent disappearance.
-            If they are inside the `motion.div` that might be scroll-controlled by Lenis, they could be affected.
-            Moving them out of the main scrollable container ensures they are always positioned relative to the viewport.
-        */}
+      <div className="relative min-h-screen">
+
+   
         {showNavbar && (
           <div className="fixed top-0 left-0 right-0 z-[1010]"> {/* Ensure high z-index */}
-            <Navbar />
+          
+            <Navbar noBlur />
+
+
           </div>
         )}
 
-        {/* These elements are also fixed, so they should generally remain visible.
-            The issue might be with their `bottom` positioning conflicting with Lenis's transforms,
-            or a z-index issue if another element is covering them. */}
+   
         {showNavbar && (
           <>
             <h3

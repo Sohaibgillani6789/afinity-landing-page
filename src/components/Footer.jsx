@@ -22,8 +22,23 @@ const Footer = () => {
   ];
   
   return (
-    <footer id="contact" className="bg-white transparent py-4 text-black border-t border-gray-800">
-      <div className="container-custom py-16">
+    <footer id="contact" className="relative bg-white py-4 text-black border-t border-gray-800 overflow-hidden">      {/* Background Pattern */}
+      <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
+        <div 
+          className="absolute inset-0"
+          style={{
+           background: `url('/pictures/pattern.svg') no-repeat center 120px`,           
+           backgroundRepeat: 'no-repeat',
+           backgroundPosition: 'center center',
+           backgroundSize: 'cover',
+           opacity: 0.2,
+           filter: 'invert(1) contrast(40%)', // This will make the light SVG dark
+          }}
+        />
+      </div>
+
+      {/* Content Container with higher z-index */}
+      <div className="container-custom py-16 relative z-10">
         {/* Footer Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
           {/* Company Info */}

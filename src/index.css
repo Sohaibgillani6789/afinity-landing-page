@@ -1,3 +1,6 @@
+@import './animations.css';
+
+/* Custom container class */
 .container-custom {
   width: 100%;
   max-width: 1200px;

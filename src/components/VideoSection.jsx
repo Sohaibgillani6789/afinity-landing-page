@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 const videos = [
   {
     id: 1,
-    title: "Afinity uses data and artificial intelligence to transform the quality of    interpersonal interactions",
+    title: "What we do",
     url: "https://res.cloudinary.com/ddzllbqlv/video/upload/v1748342620/zjtzamruh1ztnsjntam7.mp4",
     buttonId: "what-we-do",
     path: "/what-we-do"
@@ -53,23 +53,17 @@ const VideoSection = () => {
     exit: { opacity: 0, transition: { duration: 0.5 } }
   }), []);
 
-  const buttonVariants = useMemo(() => ({
-    hidden: { opacity: 0, y: 20 },
-    visible: {
+  // Add button animation variants
+  const buttonVariants = {
+    hidden: { opacity: 0 },
+    visible: (index) => ({
       opacity: 1,
-      y: 0,
       transition: {
-        type: "spring",
-        stiffness: 300,
-        damping: 20
+        duration: 0.5,
+        delay: index * 0.15 // Stagger effect for multiple buttons
       }
-    },
-    exit: {
-      opacity: 0,
-      y: -20,
-      transition: { duration: 0.2 }
-    }
-  }), []);
+    })
+  };
 
   const cursorVariants = useMemo(() => ({
     default: { 
@@ -260,36 +254,51 @@ const VideoSection = () => {
       {/* Button Nav - Desktop (Top Right) */}
       {!isMobile && (
         <div className="absolute top-8 right-[calc(2rem--190px)] z-[5000] flex flex-row gap-8 pointer-events-auto">
-          {videos.map((video, index) => (
-            <div key={video.id} className="flex flex-col group">
-              <button
-                id={video.buttonId}
-                className={`text-white uppercase text-lm font-medium tracking-wider ${
-                  activeVideo === index ? 'opacity-100' : 'opacity-40 hover:opacity-100'
-                } transition-opacity duration-300 text-left`}
-                onClick={() => handleVideoChange(index, true)}
-                onMouseEnter={() => handleButtonHover(true)}
-                onMouseLeave={() => handleButtonHover(false)}
+          <AnimatePresence>
+            {videos.map((video, index) => (
+              <motion.div
+                key={video.id}
+                className="flex flex-col group"
+                variants={buttonVariants}
+                initial="hidden"
+                animate="visible"
+                custom={index}
               >
-                {video.buttonId === 'how-we-do-it' ? 'How We Do It' : video.buttonId.replace(/-/g, ' ')}
-              </button>
-            </div>
-          ))}
+                <button
+                  id={video.buttonId}
+                  className={`text-white uppercase text-lm font-medium tracking-wider ${
+                    activeVideo === index ? 'opacity-100' : 'opacity-40 hover:opacity-100'
+                  } transition-all duration-300 text-left`}
+                  onClick={() => handleVideoChange(index, true)}
+                  onMouseEnter={() => handleButtonHover(true)}
+                  onMouseLeave={() => handleButtonHover(false)}
+                >
+                  {video.buttonId === 'how-we-do-it' ? 'How We Do It' : video.buttonId.replace(/-/g, ' ')}
+                </button>
+              </motion.div>
+            ))}
+          </AnimatePresence>
         </div>
       )}
 
       {/* Button Nav - Mobile/Tablet (Top Right as Circles) */}
       {isMobile && (
         <div className="absolute bottom-20 right-8 z-20 flex flex-row gap-4">
-          {videos.map((video, index) => (
-            <button
-              key={video.id}
-              id={video.buttonId}
-              className={`w-3 h-3 rounded-full ${activeVideo === index ? 'bg-green-600' : 'bg-white/50'} transition-all duration-300`}
-              onClick={() => handleVideoChange(index, true)}
-              aria-label={`Video ${index + 1}`}
-            />
-          ))}
+          <AnimatePresence>
+            {videos.map((video, index) => (
+              <motion.button
+                key={video.id}
+                variants={buttonVariants}
+                initial="hidden"
+                animate="visible"
+                custom={index}
+                id={video.buttonId}
+                className={`w-3 h-3 rounded-full ${activeVideo === index ? 'bg-green-600' : 'bg-white/50'} transition-all duration-300`}
+                onClick={() => handleVideoChange(index, true)}
+                aria-label={`Video ${index + 1}`}
+              />
+            ))}
+          </AnimatePresence>
         </div>
       )}
 

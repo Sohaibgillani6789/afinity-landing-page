@@ -8,8 +8,8 @@ const BoxesGrid = () => {
 
   const handleNavigation = (e, path) => {
     e.preventDefault();
-    console.log('Navigating to blog...');
-    navigate('/blog');
+    window.scrollTo(0, 0);
+    navigate(path);
   };
 
   const gridItems = [
@@ -80,7 +80,7 @@ const BoxesGrid = () => {
 
       {/* Grid container with performance optimizations */}
       <div 
-        className="relative z-20 w-full h-full grid grid-cols-1 md:grid-cols-3 grid-rows-3"
+        className="relative z-20 w-full h-full grid grid-cols-3 grid-rows-3"
       >
         {gridItems.map((item) => (
           <div
@@ -89,10 +89,10 @@ const BoxesGrid = () => {
             onClick={item.path ? (e) => handleNavigation(e, item.path) : undefined}
           >
             <div className="text-center">
-              <h3 className="text-white text-base sm:text-lg md:text-xl font-medium transform transition-transform duration-300 group-hover:scale-150">
+              <h3 className="text-white text-xl font-medium transform transition-transform duration-300 group-hover:scale-150">
                 {item.title}
               </h3>
-              <p className="text-white/90 text-xs sm:text-sm mt-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <p className="text-white/90 text-sm mt-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                 {item.description}
               </p>
               {item.path && (

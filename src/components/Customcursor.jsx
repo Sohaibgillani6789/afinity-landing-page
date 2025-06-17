@@ -20,7 +20,6 @@ const CustomCursor = () => {
       }
     };
 
-    // More efficient hover detection
     const handleMouseOver = (e) => {
       const target = e.target;
       const isClickable = 
@@ -33,9 +32,9 @@ const CustomCursor = () => {
       setIsHovering(isClickable);
     };
 
-    // Add event listeners with passive where possible
-    window.addEventListener('mousemove', handleMouseMove, { passive: true });
-    document.addEventListener('mouseover', handleMouseOver, { passive: true });
+    // Add event listeners
+    window.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseover', handleMouseOver);
 
     // Hide the default cursor
     document.body.style.cursor = 'none';
@@ -48,7 +47,6 @@ const CustomCursor = () => {
     };
   }, []);
 
-  // Simplified cursor variants
   const cursorVariants = {
     default: {
       x: mousePosition.x - 16,
@@ -112,8 +110,6 @@ const CustomCursor = () => {
           borderRadius: '50%',
           border: '2px solid green',
           backgroundColor: 'rgba(0, 255, 0, 0.2)',
-          willChange: 'transform, opacity, width, height', // Optimize for animation
-          transform: 'translateZ(0)' // Force hardware acceleration
         }}
       />
       
@@ -130,8 +126,6 @@ const CustomCursor = () => {
           width: 8,
           borderRadius: '50%',
           backgroundColor: 'green',
-          willChange: 'transform, opacity', // Optimize for animation
-          transform: 'translateZ(0)' // Force hardware acceleration
         }}
       />
     </>

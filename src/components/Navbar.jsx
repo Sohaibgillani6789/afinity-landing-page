@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const Navbar = () => {
+const Navbar = ({ noBlur }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const navigate = useNavigate();
@@ -16,7 +16,7 @@ const Navbar = () => {
   }, [handleScroll]);
 
   const navLinks = [
-    { name: 'What We Do', href: '#what-we-do', type: 'anchor' },
+    { name: 'Home', href: '/Home', type: 'route' },
     { name: 'How We Do It', href: '/how-we-do-it', type: 'route' },
     { name: 'What We Deliver', href: '/what-we-deliver', type: 'route' },
     { name: 'Contact', href: '#contact', type: 'anchor' }
@@ -39,10 +39,9 @@ const Navbar = () => {
 
   const handleNavClick = (link) => {
     if (link.type === 'route') {
-      // Pass state for sliding animation
-      navigate(link.href, { state: { slideDirection: 'right' } });
+      navigate(link.href);
       setIsOpen(false);
-    } else {
+    } else if (link.type === 'anchor') {
       scrollToSection(link.href);
     }
   };
@@ -55,7 +54,7 @@ const Navbar = () => {
     <>
       {/* Navbar */}
       <nav className={`fixed top-0 left-0 right-0 z-[2001] transition-all duration-300 ${
-        scrolled ? 'bg-white/20 backdrop-blur-md' : 'bg-transparent'
+        noBlur ? 'bg-transparent' : scrolled ? 'bg-white/20 backdrop-blur-md' : 'bg-transparent'
       }`}>
         <div className="flex justify-between items-center h-16 px-5 sm:h-20 sm:px-8 md:px-12 lg:px-16 xl:px-20 max-w-full">
           {/* Logo - Left Side */}

@@ -42,19 +42,10 @@ const App = () => {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/how-we-do-it" element={<HowWeDoIt showProcessSummary={true} />} />
-          <Route path="/what-we-deliver" element={<WhatWeDeliver />} /> {/* Add this route */}
+          <Route path="/what-we-deliver" element={<WhatWeDeliver />} />
           <Route path="/blog" element={<Blog />} />
-          {/* Add the route for individual blog posts using the :slug parameter */}
           <Route path="/blog/:slug" element={<BlogPost />} />
-          
-          <Route 
-            path="*" 
-            element={
-              <>
-                <Navigate to="/" />
-              </>
-            } 
-          />
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       )}
     </Router>
